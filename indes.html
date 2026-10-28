@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My First Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eaf0f8;
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      width: 280px;
+      box-shadow: 0 5px 20px #0002;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 14px;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    button {
+      padding: 14px 4px;
+      font-size: 18px;
+      border: 0;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #e0e8f5;
+    }
+
+    button:hover { background: #c4d6f0; }
+    .equal { background: #83d6a0; }
+  </style>
+</head>
+<body>
+  <main class="calculator">
+    <h2>My Calculator</h2>
+    <input id="display" value="0" readonly>
+
+    <div class="buttons">
+      <button onclick="clearDisplay()">C</button>
+      <button onclick="add('/')">÷</button>
+      <button onclick="add('*')">×</button>
+      <button onclick="backspace()">⌫</button>
+      <button onclick="add('7')">7</button>
+      <button onclick="add('8')">8</button>
+      <button onclick="add('9')">9</button>
+      <button onclick="add('-')">−</button>
+      <button onclick="add('4')">4</button>
+      <button onclick="add('5')">5</button>
+      <button onclick="add('6')">6</button>
+      <button onclick="add('+')">+</button>
+      <button onclick="add('1')">1</button>
+      <button onclick="add('2')">2</button>
+      <button onclick="add('3')">3</button>
+      <button class="equal" onclick="calculate()">=</button>
+      <button onclick="add('0')">0</button>
+      <button onclick="add('.')">.</button>
+    </div>
+  </main>
+
+  <script>
+    const display = document.getElementById("display");
+    let expression = "";
+
+    function add(value) {
+      expression += value;
+      display.value = expression;
+    }
+
+    function clearDisplay() {
+      expression = "";
+      display.value = "0";
+    }
+
+    function backspace() {
+      expression = expression.slice(0, -1);
+      display.value = expression || "0";
+    }
+
+    function calculate() {
+      try {
+        if (!expression || !/^[0-9+\-*/.() ]+$/.test(expression)) {
+          throw new Error("Invalid input");
+        }
+
+        const result = Function(
+          '"use strict"; return (' + expression + ')'
+        )();
+
+        if (!Number.isFinite(result)) {
+          throw new Error("Invalid result");
+        }
+
+        expression = String(result);
+        display.value = expression;
+      } catch {
+        expression = "";
+        display.value = "Invalid";
+      }
+    }
+  </script>
+</body>
+</html>
